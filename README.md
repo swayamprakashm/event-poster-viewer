@@ -117,9 +117,10 @@ Feel free to modify or adapt it for your events and presentations!
 
 ---
 
-👤 Developer Profile
+## 👤 Developer Profile
 
 Swayam Prakash Macharla
+
 🔗 GitHub: https://github.com/swayamprakashm
 
 ---
