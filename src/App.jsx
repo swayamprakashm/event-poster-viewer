@@ -5,6 +5,7 @@ const posters = [
   "/posters/poster1.png",
   "/posters/poster2.png",
   "/posters/poster3.png",
+  "/posters/poster4.jpeg",
 ];
 
 const videos = [
