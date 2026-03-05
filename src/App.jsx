@@ -133,6 +133,8 @@ function App() {
           className="video-player"
           autoPlay
           muted
+          playsInline
+          loop={!playAll}
           onEnded={() => {
             if (playAll) {
               setSelectedVideo((prev) =>
@@ -143,10 +145,10 @@ function App() {
         />
       )}
 
-      {/* 🎛️ COMBINED LEFT CONTROL PANEL */}
+      {/* 🎛️ CONTROL PANEL */}
       <div className={`video-menu ${showControls ? "show" : "hide"}`}>
 
-        {/* Poster Controls (only in poster mode) */}
+        {/* Poster Controls */}
         {selectedVideo === null && (
           <>
             <button onClick={handlePrev}>◀</button>
@@ -199,7 +201,9 @@ function App() {
         >
           ALL
         </button>
-          <button onClick={toggleFullscreen}>⛶</button>
+
+        <button onClick={toggleFullscreen}>⛶</button>
+
         <button
           onClick={() => {
             setPlayAll(false);
@@ -210,7 +214,6 @@ function App() {
         </button>
 
       </div>
-
     </div>
   );
 }
