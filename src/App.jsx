@@ -30,17 +30,13 @@ function App() {
 
   const intervalRef = useRef(null);
 
-  /* =========================
-     Splash Delay
-  ========================= */
+  /* Splash Delay */
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3500);
     return () => clearTimeout(timer);
   }, []);
 
-  /* =========================
-     Poster Auto Slide
-  ========================= */
+  /* Poster Auto Slide */
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -79,9 +75,7 @@ function App() {
     }
   };
 
-  /* =========================
-     Auto Hide Controls
-  ========================= */
+  /* Auto Hide Controls */
   useEffect(() => {
     let timeout;
 
@@ -100,9 +94,7 @@ function App() {
     };
   }, []);
 
-  /* =========================
-     Splash Screen
-  ========================= */
+  /* Splash Screen */
   if (loading) {
     return (
       <div className="splash">
@@ -114,13 +106,10 @@ function App() {
     );
   }
 
-  /* =========================
-     Main UI
-  ========================= */
   return (
     <div className="container">
 
-      {/* 🎬 MAIN DISPLAY */}
+      {/* MAIN DISPLAY */}
       {selectedVideo === null ? (
         <img
           src={posters[current]}
@@ -129,12 +118,13 @@ function App() {
         />
       ) : (
         <video
+          key={selectedVideo}   // ⭐ IMPORTANT FIX
           src={videos[selectedVideo]}
           className="video-player"
           autoPlay
           muted
           playsInline
-          loop={!playAll}
+          loop={!playAll}       // single video infinite loop
           onEnded={() => {
             if (playAll) {
               setSelectedVideo((prev) =>
@@ -145,7 +135,7 @@ function App() {
         />
       )}
 
-      {/* 🎛️ CONTROL PANEL */}
+      {/* CONTROL PANEL */}
       <div className={`video-menu ${showControls ? "show" : "hide"}`}>
 
         {/* Poster Controls */}
@@ -155,25 +145,9 @@ function App() {
             <button onClick={handleNext}>▶</button>
 
             <div className="time-control-vertical">
-              <button
-                onClick={() =>
-                  setSlideTime((prev) => Math.max(0, prev - 1))
-                }
-              >
-                −
-              </button>
-
-              <span>
-                {slideTime === 0 ? "M" : `${slideTime}s`}
-              </span>
-
-              <button
-                onClick={() =>
-                  setSlideTime((prev) => prev + 1)
-                }
-              >
-                +
-              </button>
+              <button onClick={() => setSlideTime((prev) => Math.max(0, prev - 1))}>−</button>
+              <span>{slideTime === 0 ? "M" : `${slideTime}s`}</span>
+              <button onClick={() => setSlideTime((prev) => prev + 1)}>+</button>
             </div>
 
             <button onClick={toggleFullscreen}>⛶</button>
@@ -193,6 +167,7 @@ function App() {
           </button>
         ))}
 
+        {/* Play All */}
         <button
           onClick={() => {
             setPlayAll(true);
@@ -204,6 +179,7 @@ function App() {
 
         <button onClick={toggleFullscreen}>⛶</button>
 
+        {/* Back to Poster */}
         <button
           onClick={() => {
             setPlayAll(false);
