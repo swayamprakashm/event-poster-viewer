@@ -7,35 +7,49 @@ const posters = [
   "/posters/poster3.png",
 ];
 
+const videos = [
+  "/videos/video1.mp4",
+  "/videos/video2.mp4",
+  "/videos/video3.mp4",
+  "/videos/video4.mp4",
+  "/videos/video5.mp4",
+  "/videos/video6.mp4",
+];
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
   const [showControls, setShowControls] = useState(true);
   const [slideTime, setSlideTime] = useState(0);
+
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [playAll, setPlayAll] = useState(false);
+
   const intervalRef = useRef(null);
 
-  // Splash delay
+  /* =========================
+     Splash Delay
+  ========================= */
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3500);
-
+    const timer = setTimeout(() => setLoading(false), 3500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto slide
+  /* =========================
+     Poster Auto Slide
+  ========================= */
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
-    if (slideTime > 0) {
+    if (slideTime > 0 && selectedVideo === null) {
       intervalRef.current = setInterval(() => {
         handleNext();
       }, slideTime * 1000);
     }
 
     return () => clearInterval(intervalRef.current);
-  }, [slideTime, current]);
+  }, [slideTime, current, selectedVideo]);
 
   const handleNext = () => {
     setFade(false);
@@ -63,15 +77,16 @@ function App() {
     }
   };
 
-  // Auto hide controls
+  /* =========================
+     Auto Hide Controls
+  ========================= */
   useEffect(() => {
     let timeout;
+
     const handleMouseMove = () => {
       setShowControls(true);
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        setShowControls(false);
-      }, 3000);
+      timeout = setTimeout(() => setShowControls(false), 3000);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -83,54 +98,117 @@ function App() {
     };
   }, []);
 
-  // 🔥 Splash Screen
-  // 🔥 Splash Screen (No Box)
-if (loading) {
-  return (
-    <div className="splash">
-      <img src="/icon.png" alt="Logo" className="logo-img" />
-      <div className="spinner"></div>
-      <p className="loading-text">Launching Event Display</p>
-      <p className="loading-author">Swayam Prakash Macharla</p>
-    </div>
-  );
-}
+  /* =========================
+     Splash Screen
+  ========================= */
+  if (loading) {
+    return (
+      <div className="splash">
+        <img src="/icon.png" alt="Logo" className="logo-img" />
+        <div className="spinner"></div>
+        <p className="loading-text">Launching Event Display</p>
+        <p className="loading-author">Swayam Prakash Macharla</p>
+      </div>
+    );
+  }
 
+  /* =========================
+     Main UI
+  ========================= */
   return (
     <div className="container">
-      <img
-        src={posters[current]}
-        alt="Poster"
-        className={`poster ${fade ? "fade-in" : "fade-out"}`}
-      />
 
-      <div className={`controls ${showControls ? "show" : "hide"}`}>
-        <button className="fullscreen-btn" onClick={toggleFullscreen}>
-          ⛶
-        </button>
+      {/* 🎬 MAIN DISPLAY */}
+      {selectedVideo === null ? (
+        <img
+          src={posters[current]}
+          alt="Poster"
+          className={`poster ${fade ? "fade-in" : "fade-out"}`}
+        />
+      ) : (
+        <video
+          src={videos[selectedVideo]}
+          className="video-player"
+          autoPlay
+          muted
+          onEnded={() => {
+            if (playAll) {
+              setSelectedVideo((prev) =>
+                prev === videos.length - 1 ? 0 : prev + 1
+              );
+            }
+          }}
+        />
+      )}
 
-        <button className="prev-btn" onClick={handlePrev}>
-          ◀
-        </button>
+      {/* 🎛️ COMBINED LEFT CONTROL PANEL */}
+      <div className={`video-menu ${showControls ? "show" : "hide"}`}>
 
-        <button className="next-btn" onClick={handleNext}>
-          ▶
-        </button>
+        {/* Poster Controls (only in poster mode) */}
+        {selectedVideo === null && (
+          <>
+            <button onClick={handlePrev}>◀</button>
+            <button onClick={handleNext}>▶</button>
 
-        <div className="time-control">
-          <button onClick={() => setSlideTime((p) => Math.max(0, p - 1))}>
-            −
+            <div className="time-control-vertical">
+              <button
+                onClick={() =>
+                  setSlideTime((prev) => Math.max(0, prev - 1))
+                }
+              >
+                −
+              </button>
+
+              <span>
+                {slideTime === 0 ? "M" : `${slideTime}s`}
+              </span>
+
+              <button
+                onClick={() =>
+                  setSlideTime((prev) => prev + 1)
+                }
+              >
+                +
+              </button>
+            </div>
+
+            <button onClick={toggleFullscreen}>⛶</button>
+          </>
+        )}
+
+        {/* Video Buttons */}
+        {videos.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setPlayAll(false);
+              setSelectedVideo(i);
+            }}
+          >
+            {i + 1}
           </button>
+        ))}
 
-          <span>
-            {slideTime === 0 ? "Manual" : `${slideTime}s`}
-          </span>
+        <button
+          onClick={() => {
+            setPlayAll(true);
+            setSelectedVideo(0);
+          }}
+        >
+          ALL
+        </button>
+          <button onClick={toggleFullscreen}>⛶</button>
+        <button
+          onClick={() => {
+            setPlayAll(false);
+            setSelectedVideo(null);
+          }}
+        >
+          P
+        </button>
 
-          <button onClick={() => setSlideTime((p) => p + 1)}>
-            +
-          </button>
-        </div>
       </div>
+
     </div>
   );
 }

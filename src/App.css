@@ -10,9 +10,9 @@
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at center, #111 0%, #000 80%);
+  z-index: 999;
 }
 
-/* Logo */
 .logo-img {
   width: 180px;
   margin-bottom: 40px;
@@ -20,7 +20,6 @@
   filter: drop-shadow(0 0 35px rgba(255, 200, 120, 0.5));
 }
 
-/* Spinner */
 .spinner {
   width: 55px;
   height: 55px;
@@ -30,13 +29,13 @@
   animation: spin 1s linear infinite;
 }
 
-/* Text */
 .loading-text {
   margin-top: 25px;
   color: rgba(255, 255, 255, 0.85);
   font-size: 18px;
   letter-spacing: 1px;
 }
+
 .loading-author {
   color: #ffffff;
   font-size: 13px;
@@ -44,16 +43,28 @@
 }
 
 /* =========================
-   Poster Viewer
+   Main Container
 ========================= */
 
 .container {
   width: 100%;
   height: 100vh;
   position: relative;
+  background: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.poster {
+/* =========================
+   Poster & Video
+========================= */
+
+.poster,
+.video-player {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -69,46 +80,68 @@
 }
 
 /* =========================
-   Controls (Glass Style)
+   Bottom Horizontal Control Panel (Box-Free)
 ========================= */
 
-.controls {
+.video-menu {
   position: absolute;
-  bottom: 30px;
-  left: 30px;
-  display: flex;
-  gap: 15px;
-  transition: opacity 0.5s;
+  bottom: 20px;             /* near bottom */
+  left: 50%;                /* center horizontally */
+  transform: translateX(-50%); /* perfect centering */
+  display: flex;            /* horizontal layout */
+  flex-direction: row;      /* row of buttons */
+  align-items: center;      /* vertical alignment */
+  gap: 12px;                /* spacing between buttons */
+  z-index: 5;
+
+  /* Box-free settings */
+  padding: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+  background: transparent;
+  transition: opacity 0.5s ease, transform 0.3s ease;
 }
 
-.show {
+/* Show / Hide Animation */
+.video-menu.show {
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
-.hide {
+.video-menu.hide {
   opacity: 0;
+  transform: translateX(-50%) translateY(20px);
 }
 
-button {
-  backdrop-filter: blur(15px);
-  background: rgba(255, 255, 255, 0.1);
+/* Glass Buttons */
+.video-menu button {
+  width: 45px;               /* slightly smaller for clean look */
+  height: 45px;
+  font-size: 16px;
+  font-weight: bold;
+  backdrop-filter: blur(15px);  /* subtle frosted effect */
+  background: rgba(255, 255, 255, 0.08); /* very light glass effect */
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   color: white;
-  padding: 10px 15px;
-  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: 0.3s ease, box-shadow 0.3s ease;
 }
 
-button:hover {
+.video-menu button:hover {
   background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.35); /* subtle glow */
 }
 
-.time-control {
+/* Vertical Timer Layout (optional) */
+.time-control-vertical {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   color: white;
+  font-size: 14px;
 }
 
 /* =========================
