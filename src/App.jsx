@@ -16,6 +16,7 @@ const videos = [
   "/videos/video4.mp4",
   "/videos/video5.mp4",
   "/videos/video6.mp4",
+  "/videos/video7.mp4",
 ];
 
 function App() {
